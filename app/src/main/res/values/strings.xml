@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Budget App</string>
+    <string name="app_header">Budget</string>
+    <string name="app_username_input">Username</string>
+    <string name="app_password_input">Password</string>
+    <string name="app_register_button_text">Register</string>
+    <string name="app_login_button_text">Login</string>
+    <string name="app_enter_salary_label">Enter your monthly salary ($USD)</string>
+    <string name="app_begin_button_text">Begin</string>
+    <string name="app_income_label">Income</string>
+    <string name="app_expense_label">Expense</string>
+    <string name="app_balance_label">Balance</string>
+    <string name="app_expenses_list_label">Expenses</string>
+    <string name="app_expense_date_input">Date (YYYY-MM-DD)</string>
+    <string name="app_expense_amount_input">Amount ($ USD)</string>
+    <string name="app_expense_note_input">Note (optional)</string>
+    <string name="app_expense_submit_button_text">Add Expense</string>
+</resources>
