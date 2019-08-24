@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LandingActivity">
+    tools:context=".FirstLoginFragment">
 
     <TextView
-        android:id="@+id/appHeader"
+        android:id="@+id/appHeader2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/app_header"
@@ -22,24 +22,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/appUsernameInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/appMonthlySalaryLabel"
+        android:layout_width="237dp"
+        android:layout_height="85dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:ems="10"
-        android:hint="@string/app_username_input"
-        android:inputType="textPersonName"
+        android:hint="@string/app_enter_salary_label"
+        android:textColor="#2196F3"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appHeader" />
+        app:layout_constraintTop_toBottomOf="@+id/appHeader2" />
 
     <EditText
-        android:id="@+id/appPasswordInput"
+        android:id="@+id/appMonthlySalaryInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appMonthlySalaryLabel" />
+
+    <Button
+        android:id="@+id/appBeginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -47,37 +62,8 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:ems="10"
-        android:hint="@string/app_password_input"
-        android:inputType="textPassword"
+        android:text="@string/app_begin_button_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appUsernameInput" />
-
-    <Button
-        android:id="@+id/appRegisterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginLeft="64dp"
-        android:layout_marginTop="32dp"
-        android:onClick="onClickRegister"
-        android:text="@string/app_register_button_text"
-        app:layout_constraintEnd_toStartOf="@+id/appLoginButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appPasswordInput" />
-
-    <Button
-        android:id="@+id/appLoginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:layout_marginRight="64dp"
-        android:onClick="onClickLogin"
-        android:text="@string/app_login_button_text"
-        app:layout_constraintBaseline_toBaselineOf="@+id/appRegisterButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/appRegisterButton" />
+        app:layout_constraintTop_toBottomOf="@+id/appMonthlySalaryInput" />
 </androidx.constraintlayout.widget.ConstraintLayout>
