@@ -29,8 +29,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.budgetapp.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_addExpenseFragment2"
             app:destination="@id/addExpenseFragment" />
@@ -38,7 +38,7 @@
     <fragment
         android:id="@+id/addExpenseFragment"
         android:name="com.budgetapp.AddExpenseFragment"
-        android:label="fragment_add_expense"
+        android:label="Add Expense"
         tools:layout="@layout/fragment_add_expense">
         <action
             android:id="@+id/action_addExpenseFragment_to_homeFragment2"
