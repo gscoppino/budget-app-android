@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import com.budgetapp.dummy.DummyContent;
 import com.budgetapp.dummy.DummyContent.DummyItem;
 
-import java.util.List;
-
 /**
  * A fragment representing a list of Items.
  * <p/>

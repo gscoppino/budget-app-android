@@ -1,6 +1,7 @@
 package com.budgetapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.budgetapp.dummy.DummyContent;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements
         LandingFragment.OnFragmentInteractionListener,
@@ -24,12 +26,23 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
 
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        appBarConfiguration = new AppBarConfiguration.Builder(R.id.homeFragment).build();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout);
+
+        appBarConfiguration = new AppBarConfiguration.Builder(R.id.homeFragment)
+                .setDrawerLayout(drawerLayout)
+                .build();
+
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        NavigationView navView = findViewById(R.id.nav_view);
+
+        NavigationUI.setupWithNavController(navView, navController);
     }
 
     @Override

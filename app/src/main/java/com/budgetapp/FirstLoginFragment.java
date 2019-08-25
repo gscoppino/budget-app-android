@@ -1,10 +1,8 @@
 package com.budgetapp;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -66,8 +64,6 @@ public class FirstLoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_first_login, container, false);
 
