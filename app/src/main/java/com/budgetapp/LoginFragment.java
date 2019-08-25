@@ -1,6 +1,7 @@
 package com.budgetapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,12 +14,12 @@ import android.view.ViewGroup;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FirstLoginFragment.OnFragmentInteractionListener} interface
+ * {@link LoginFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FirstLoginFragment#newInstance} factory method to
+ * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FirstLoginFragment extends Fragment {
+public class LoginFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +31,7 @@ public class FirstLoginFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public FirstLoginFragment() {
+    public LoginFragment() {
         // Required empty public constructor
     }
 
@@ -40,11 +41,11 @@ public class FirstLoginFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FirstLoginFragment.
+     * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FirstLoginFragment newInstance(String param1, String param2) {
-        FirstLoginFragment fragment = new FirstLoginFragment();
+    public static LoginFragment newInstance(String param1, String param2) {
+        LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,13 +66,22 @@ public class FirstLoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_first_login, container, false);
+        View view =  inflater.inflate(R.layout.fragment_login, container, false);
 
-        view.findViewById(R.id.appBeginButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.appRegisterButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onBegin(view);
+                    mListener.onRegister(view);
+                }
+            }
+        });
+
+        view.findViewById(R.id.appLoginButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mListener != null) {
+                    mListener.onLogin(view);
                 }
             }
         });
@@ -80,11 +90,11 @@ public class FirstLoginFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
-//            mListener.onBegin(uri);
+//            mListener.onFragmentInteraction(uri);
 //        }
-//    }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -114,6 +124,7 @@ public class FirstLoginFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onBegin(View view);
+        void onLogin(View view);
+        void onRegister(View view);
     }
 }

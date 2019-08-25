@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ExpenseFragment"
-    tools:listitem="@layout/fragment_expense" />
+    tools:context=".ExpenseListItemFragment"
+    tools:listitem="@layout/fragment_expense_list_item" />

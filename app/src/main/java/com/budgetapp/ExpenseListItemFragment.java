@@ -21,7 +21,7 @@ import com.budgetapp.dummy.DummyContent.DummyItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ExpenseFragment extends Fragment {
+public class ExpenseListItemFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -33,13 +33,13 @@ public class ExpenseFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ExpenseFragment() {
+    public ExpenseListItemFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ExpenseFragment newInstance(int columnCount) {
-        ExpenseFragment fragment = new ExpenseFragment();
+    public static ExpenseListItemFragment newInstance(int columnCount) {
+        ExpenseListItemFragment fragment = new ExpenseListItemFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -69,7 +69,7 @@ public class ExpenseFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyExpenseRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new ExpenseListRecyclerViewAdapter(DummyContent.ITEMS, mListener));
         }
         return view;
     }

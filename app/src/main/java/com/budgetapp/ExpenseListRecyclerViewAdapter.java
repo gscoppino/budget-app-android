@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.budgetapp.ExpenseFragment.OnListFragmentInteractionListener;
+import com.budgetapp.ExpenseListItemFragment.OnListFragmentInteractionListener;
 import com.budgetapp.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -17,12 +17,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyExpenseRecyclerViewAdapter extends RecyclerView.Adapter<MyExpenseRecyclerViewAdapter.ViewHolder> {
+public class ExpenseListRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseListRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyExpenseRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public ExpenseListRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -30,7 +30,7 @@ public class MyExpenseRecyclerViewAdapter extends RecyclerView.Adapter<MyExpense
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_expense, parent, false);
+                .inflate(R.layout.fragment_expense_list_item, parent, false);
         return new ViewHolder(view);
     }
 
