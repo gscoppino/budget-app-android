@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 /**
@@ -30,6 +31,9 @@ public class LoginFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private EditText usernameField;
+    private EditText passwordField;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -68,11 +72,14 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_login, container, false);
 
+        usernameField = view.findViewById(R.id.appUsernameInput);
+        passwordField = view.findViewById(R.id.appPasswordInput);
+
         view.findViewById(R.id.appRegisterButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onRegister(view);
+                    mListener.onRegister(view, usernameField.getText().toString(), passwordField.getText().toString());
                 }
             }
         });
@@ -81,7 +88,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onLogin(view);
+                    mListener.onLogin(view, usernameField.getText().toString(), passwordField.getText().toString());
                 }
             }
         });
@@ -124,7 +131,7 @@ public class LoginFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view);
-        void onRegister(View view);
+        void onLogin(View view, String username, String password);
+        void onRegister(View view, String username, String password);
     }
 }
