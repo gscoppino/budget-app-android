@@ -7,18 +7,22 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.budgetapp.dummy.DummyContent;
 import com.google.android.material.navigation.NavigationView;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
-        AddExpenseFragment.OnFragmentInteractionListener,
-        ExpenseListItemFragment.OnListFragmentInteractionListener {
+        AddExpenseFragment.OnFragmentInteractionListener {
 
     AppBarConfiguration appBarConfiguration;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,14 @@ public class MainActivity extends AppCompatActivity implements
         NavigationView navView = findViewById(R.id.nav_view);
 
         NavigationUI.setupWithNavController(navView, navController);
+
+        Intent intent = getIntent();
+        userId = intent.getIntExtra(LandingActivity.LOGIN_USER_ID_KEY, -1);
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(HomeFragment.USER_ID_KEY, userId);
+
+        navController.setGraph(R.navigation.main_navigation_graph, bundle);
     }
 
     @Override
@@ -48,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(Purchase item) {
 
     }
 
@@ -56,7 +68,24 @@ public class MainActivity extends AppCompatActivity implements
         Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_addExpenseFragment);
     }
 
-    public void onSubmitExpense(View view) {
-        Navigation.findNavController(view).navigate(R.id.action_addExpenseFragment_to_homeFragment);
+    public void onSubmitExpense(final View view, final int cost) {
+        NewPurchasePayload newPurchasePayload = new NewPurchasePayload();
+        newPurchasePayload.setCost(cost);
+        ApiServiceSingleton.getInstance().purchaseService
+                .createPurchase(this.userId, newPurchasePayload)
+                .enqueue(new Callback<Purchase>() {
+                    @Override
+                    public void onResponse(Call<Purchase> call, Response<Purchase> response) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt(HomeFragment.USER_ID_KEY, userId);
+                        Navigation.findNavController(view)
+                                .navigate(R.id.action_addExpenseFragment_to_homeFragment, bundle);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+
+                    }
+                });
     }
 }

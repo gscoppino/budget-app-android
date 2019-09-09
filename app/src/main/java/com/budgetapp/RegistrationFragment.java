@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 /**
@@ -23,6 +24,8 @@ public class RegistrationFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private EditText monthlySalaryWidget;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -67,11 +70,14 @@ public class RegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_registration, container, false);
 
+        monthlySalaryWidget = view.findViewById(R.id.appMonthlySalaryInput);
+
         view.findViewById(R.id.appBeginButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onBegin(view);
+                    int monthlySalary = Integer.parseInt(monthlySalaryWidget.getText().toString(), 10);
+                    mListener.onBegin(view, monthlySalary);
                 }
             }
         });
@@ -114,6 +120,6 @@ public class RegistrationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onBegin(View view);
+        void onBegin(View view, int monthlySalary);
     }
 }

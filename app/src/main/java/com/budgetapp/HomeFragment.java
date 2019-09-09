@@ -4,10 +4,20 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /**
@@ -23,10 +33,16 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static final String USER_ID_KEY = "USER_ID";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private int mColumnCount = 1;
+    private ExpenseListRecyclerViewAdapter viewAdapter;
+    private int userId;
+
+    private TextView expenseValueLabel;
 
     private OnFragmentInteractionListener mListener;
 
@@ -40,14 +56,16 @@ public class HomeFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param userId UserID
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance(String param1, String param2, int userId) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putInt(USER_ID_KEY, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,6 +76,7 @@ public class HomeFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            userId = getArguments().getInt(USER_ID_KEY);
         }
     }
 
@@ -67,6 +86,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        expenseValueLabel = view.findViewById(R.id.expenseValueLabel);
+
         view.findViewById(R.id.floatingActionButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +96,38 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
+        // Set the adapter
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        Context context = view.getContext();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        }
+
+        viewAdapter = new ExpenseListRecyclerViewAdapter(new ArrayList<Purchase>(), mListener);
+        recyclerView.setAdapter(viewAdapter);
+
+        if (userId != -1) {
+            ApiServiceSingleton.getInstance().budgetService
+                    .getOverviewForMonth(userId, "2019", "09")
+                    .enqueue(new Callback<BudgetMonth>() {
+                        @Override
+                        public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) {
+                            BudgetMonth budgetMonth = response.body();
+                            expenseValueLabel.setText("$" + budgetMonth.getSum());
+                            if (viewAdapter != null) {
+                                viewAdapter.setItems(budgetMonth.getPurchaseList());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<BudgetMonth> call, Throwable t) {
+
+                        }
+                    });
+        }
 
         return view;
     }
@@ -116,5 +169,6 @@ public class HomeFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         void onAddExpense(View view);
+        void onListFragmentInteraction(Purchase item);
     }
 }

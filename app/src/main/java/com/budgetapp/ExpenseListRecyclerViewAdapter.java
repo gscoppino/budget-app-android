@@ -7,25 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.budgetapp.ExpenseListItemFragment.OnListFragmentInteractionListener;
-import com.budgetapp.dummy.DummyContent.DummyItem;
-
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
+ * {@link RecyclerView.Adapter} that can display a {@link Purchase} and makes a call to the
+ * specified {@link HomeFragment.OnFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class ExpenseListRecyclerViewAdapter extends RecyclerView.Adapter<ExpenseListRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final List<Purchase> mValues;
+    private final HomeFragment.OnFragmentInteractionListener mListener;
 
-    public ExpenseListRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public ExpenseListRecyclerViewAdapter(List<Purchase> items, HomeFragment.OnFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
+
+    public void setItems(List<Purchase> items) {
+        mValues.clear();
+        mValues.addAll(items);
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,8 +40,8 @@ public class ExpenseListRecyclerViewAdapter extends RecyclerView.Adapter<Expense
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).getPurchaseDate());
+        holder.mContentView.setText(Integer.toString(mValues.get(position).getCost()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,13 +64,13 @@ public class ExpenseListRecyclerViewAdapter extends RecyclerView.Adapter<Expense
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Purchase mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = view.findViewById(R.id.item_number);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

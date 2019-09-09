@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 /**
@@ -27,6 +28,8 @@ public class AddExpenseFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private EditText expenseAmountWidget;
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,12 +69,14 @@ public class AddExpenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_expense, container, false);
+        expenseAmountWidget = view.findViewById(R.id.expenseAmountInput);
 
         view.findViewById(R.id.submitNewExpenseButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mListener != null) {
-                    mListener.onSubmitExpense(view);
+                    mListener.onSubmitExpense(view,
+                            Integer.parseInt(expenseAmountWidget.getText().toString(), 10));
                 }
             }
         });
@@ -114,6 +119,6 @@ public class AddExpenseFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onSubmitExpense(View view);
+        void onSubmitExpense(final View view, final int cost);
     }
 }
