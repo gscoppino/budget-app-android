@@ -41,7 +41,7 @@ public class ExpenseListRecyclerViewAdapter extends RecyclerView.Adapter<Expense
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getPurchaseDate());
-        holder.mContentView.setText(Integer.toString(mValues.get(position).getCost()));
+        holder.mContentView.setText('$' + Integer.toString(mValues.get(position).getCost()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
