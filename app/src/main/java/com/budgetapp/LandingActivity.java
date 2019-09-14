@@ -7,20 +7,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LandingActivity extends AppCompatActivity implements
         LoginFragment.OnFragmentInteractionListener,
         RegistrationFragment.OnFragmentInteractionListener {
 
     public static final String LOGIN_USER_ID_KEY = "com.budgetapp.LOGIN_USER_ID";
     public static final String LOGIN_USER_SALARY_KEY = "com.budgetapp.LOGIN_USER_SALARY_KEY";
-    private String usernameForRegistration;
-    private String passwordForRegistration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,56 +21,20 @@ public class LandingActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_landing);
     }
 
-    public void onLogin(View view, final String username, final String password) {
+    public void onLogin(View view, final int userId, final int userMonthlySalary) {
         final Intent intent = new Intent(this, MainActivity.class);
-        ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                User loginUser = null;
-                for (User user : response.body()) {
-                    if (user.getUsername().equals(username)) {
-                        loginUser = user;
-                        break;
-                    }
-                }
-
-                if (loginUser != null) {
-                    intent.putExtra(LOGIN_USER_ID_KEY, loginUser.getId());
-                    intent.putExtra(LOGIN_USER_SALARY_KEY, loginUser.getMonthlySalary());
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-
-            }
-        });
+        intent.putExtra(LOGIN_USER_ID_KEY, userId);
+        intent.putExtra(LOGIN_USER_SALARY_KEY, userMonthlySalary);
+        startActivity(intent);
     }
 
     public void onRegister(View view, final String username, final String password) {
-        this.usernameForRegistration = username;
-        this.passwordForRegistration = password;
-        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registrationFragment);
-    }
+        Bundle bundle = new Bundle();
+        bundle.putString(RegistrationFragment.USER_USERNAME, username);
+        bundle.putString(RegistrationFragment.USER_PASSWORD, password);
 
-    public void onBegin(View view, final int monthlySalary) {
-        final Intent intent = new Intent(this, MainActivity.class);
-        NewUserPayload newUserPayload = new NewUserPayload();
-        newUserPayload.setUsername(this.usernameForRegistration);
-        newUserPayload.setSalary(monthlySalary);
-        ApiServiceSingleton.getInstance().userService.createUser(newUserPayload).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                intent.putExtra(LOGIN_USER_ID_KEY, response.body().getId());
-                intent.putExtra(LOGIN_USER_SALARY_KEY, response.body().getMonthlySalary());
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
+        Navigation.findNavController(view).navigate(
+                R.id.action_loginFragment_to_registrationFragment,
+                bundle);
     }
 }

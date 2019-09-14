@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,11 +29,17 @@ public class RegistrationFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    public static final String USER_USERNAME = "USER_USERNAME";
+    public static final String USER_PASSWORD = "USER_PASSWORD";
+
     private EditText monthlySalaryWidget;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private String userUsername;
+    private String userPassword;
 
     private OnFragmentInteractionListener mListener;
 
@@ -46,11 +56,13 @@ public class RegistrationFragment extends Fragment {
      * @return A new instance of fragment RegistrationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegistrationFragment newInstance(String param1, String param2) {
+    public static RegistrationFragment newInstance(String param1, String param2, String userUsername, String userPassword) {
         RegistrationFragment fragment = new RegistrationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(USER_USERNAME, userUsername);
+        args.putString(USER_PASSWORD, userPassword);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +73,8 @@ public class RegistrationFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            userUsername = getArguments().getString(USER_USERNAME);
+            userPassword = getArguments().getString(USER_PASSWORD);
         }
     }
 
@@ -74,11 +88,24 @@ public class RegistrationFragment extends Fragment {
 
         view.findViewById(R.id.appBeginButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    int monthlySalary = Integer.parseInt(monthlySalaryWidget.getText().toString(), 10);
-                    mListener.onBegin(view, monthlySalary);
-                }
+            public void onClick(final View view) {
+                NewUserPayload newUserPayload = new NewUserPayload();
+                newUserPayload.setUsername(userUsername);
+                newUserPayload.setSalary(Integer.parseInt(monthlySalaryWidget.getText().toString(), 10));
+                ApiServiceSingleton.getInstance().userService.createUser(newUserPayload).enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (mListener != null) {
+                            User user = response.body();
+                            mListener.onLogin(view, user.getId(), user.getMonthlySalary());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+
+                    }
+                });
             }
         });
 
@@ -120,6 +147,6 @@ public class RegistrationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onBegin(View view, int monthlySalary);
+        void onLogin(View view, int userId, int monthlySalary);
     }
 }

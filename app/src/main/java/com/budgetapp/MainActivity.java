@@ -13,10 +13,6 @@ import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class MainActivity extends AppCompatActivity implements
         HomeFragment.OnFragmentInteractionListener,
         AddExpenseFragment.OnFragmentInteractionListener {
@@ -68,27 +64,19 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void onAddExpense(View view) {
-        Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_addExpenseFragment);
+        Bundle bundle = new Bundle();
+        bundle.putInt(AddExpenseFragment.USER_ID_KEY, userId);
+        Navigation.findNavController(view).navigate(
+                R.id.action_homeFragment_to_addExpenseFragment,
+                bundle);
     }
 
-    public void onSubmitExpense(final View view, final int cost) {
-        NewPurchasePayload newPurchasePayload = new NewPurchasePayload();
-        newPurchasePayload.setCost(cost);
-        ApiServiceSingleton.getInstance().purchaseService
-                .createPurchase(this.userId, newPurchasePayload)
-                .enqueue(new Callback<Purchase>() {
-                    @Override
-                    public void onResponse(Call<Purchase> call, Response<Purchase> response) {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt(HomeFragment.USER_ID_KEY, userId);
-                        Navigation.findNavController(view)
-                                .navigate(R.id.action_addExpenseFragment_to_homeFragment, bundle);
-                    }
-
-                    @Override
-                    public void onFailure(Call call, Throwable t) {
-
-                    }
-                });
+    public void onSubmitExpense(final View view) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(HomeFragment.USER_ID_KEY, userId);
+        bundle.putInt(HomeFragment.USER_SALARY_KEY, userMonthlySalary);
+        Navigation.findNavController(view).navigate(
+                R.id.action_addExpenseFragment_to_homeFragment,
+                bundle);
     }
 }

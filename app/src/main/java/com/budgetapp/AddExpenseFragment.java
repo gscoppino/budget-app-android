@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,10 +28,13 @@ public class AddExpenseFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    public static final String USER_ID_KEY = "USER_ID";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private int userId;
 
     private EditText expenseAmountWidget;
 
@@ -43,14 +50,16 @@ public class AddExpenseFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
+     * @param userId UserID
      * @return A new instance of fragment AddExpenseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddExpenseFragment newInstance(String param1, String param2) {
+    public static AddExpenseFragment newInstance(String param1, String param2, int userId) {
         AddExpenseFragment fragment = new AddExpenseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putInt(USER_ID_KEY, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,6 +70,7 @@ public class AddExpenseFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            userId = getArguments().getInt(USER_ID_KEY);
         }
     }
 
@@ -73,11 +83,24 @@ public class AddExpenseFragment extends Fragment {
 
         view.findViewById(R.id.submitNewExpenseButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onSubmitExpense(view,
-                            Integer.parseInt(expenseAmountWidget.getText().toString(), 10));
-                }
+            public void onClick(final View view) {
+                NewPurchasePayload newPurchasePayload = new NewPurchasePayload();
+                newPurchasePayload.setCost(Integer.parseInt(expenseAmountWidget.getText().toString(), 10));
+                ApiServiceSingleton.getInstance().purchaseService
+                        .createPurchase(userId, newPurchasePayload)
+                        .enqueue(new Callback<Purchase>() {
+                            @Override
+                            public void onResponse(Call<Purchase> call, Response<Purchase> response) {
+                                if (mListener != null) {
+                                    mListener.onSubmitExpense(view);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call call, Throwable t) {
+
+                            }
+                        });
             }
         });
 
@@ -119,6 +142,6 @@ public class AddExpenseFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onSubmitExpense(final View view, final int cost);
+        void onSubmitExpense(final View view);
     }
 }

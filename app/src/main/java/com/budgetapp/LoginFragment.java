@@ -11,6 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -88,12 +94,28 @@ public class LoginFragment extends Fragment {
 
         view.findViewById(R.id.appLoginButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    String username = usernameWidget.getText().toString();
-                    String password = passwordWidget.getText().toString();
-                    mListener.onLogin(view, username, password);
-                }
+            public void onClick(final View view) {
+                ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
+                    @Override
+                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                        User loginUser = null;
+                        for (User user : response.body()) {
+                            if (user.getUsername().equals(usernameWidget.getText().toString())) {
+                                loginUser = user;
+                                break;
+                            }
+                        }
+
+                        if (loginUser != null && mListener != null) {
+                            mListener.onLogin(view, loginUser.getId(), loginUser.getMonthlySalary());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<User>> call, Throwable t) {
+
+                    }
+                });
             }
         });
 
@@ -135,7 +157,7 @@ public class LoginFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view, String username, String password);
+        void onLogin(View view, int userId, int userMonthlySalary);
         void onRegister(View view, String username, String password);
     }
 }

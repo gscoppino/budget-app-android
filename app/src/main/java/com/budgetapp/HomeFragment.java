@@ -3,7 +3,6 @@ package com.budgetapp;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,12 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -122,17 +119,15 @@ public class HomeFragment extends Fragment {
         viewAdapter = new ExpenseListRecyclerViewAdapter(new ArrayList<Purchase>(), mListener);
         recyclerView.setAdapter(viewAdapter);
 
-        if (userId != -1) {
-            incomeValueLabel.setText("$" + userMonthlySalary);
-            updateSummary(userId, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
-            MonthPickerView monthPickerView = view.findViewById(R.id.monthPickerView);
-            monthPickerView.setOnMonthChangedListener(new MonthPickerView.OnMonthChangeListener() {
-                @Override
-                public void onSelectedMonthChange(int year, int month) {
-                    updateSummary(userId, year, month + 1);
-                }
-            });
-        }
+        incomeValueLabel.setText("$" + userMonthlySalary);
+        updateSummary(userId, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
+        MonthPickerView monthPickerView = view.findViewById(R.id.monthPickerView);
+        monthPickerView.setOnMonthChangedListener(new MonthPickerView.OnMonthChangeListener() {
+            @Override
+            public void onSelectedMonthChange(int year, int month) {
+                updateSummary(userId, year, month + 1);
+            }
+        });
 
         return view;
     }
@@ -149,6 +144,7 @@ public class HomeFragment extends Fragment {
                     public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) {
                         BudgetMonth budgetMonth = response.body();
                         expenseValueLabel.setText("$" + budgetMonth.getSum());
+                        balanceValueLabel.setText("$" + (userMonthlySalary - budgetMonth.getSum()));
                         if (viewAdapter != null) {
                             viewAdapter.setItems(budgetMonth.getPurchaseList());
                         }
@@ -156,21 +152,6 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<BudgetMonth> call, Throwable t) {
-
-                    }
-                });
-
-        ApiServiceSingleton.getInstance().remainingService
-                .getRemaining(userId)
-                .enqueue(new Callback<Remaining>() {
-                    @Override
-                    public void onResponse(Call<Remaining> call, Response<Remaining> response) {
-                        Remaining remaining = response.body();
-                        balanceValueLabel.setText("$" + remaining.getRemaining());
-                    }
-
-                    @Override
-                    public void onFailure(Call<Remaining> call, Throwable t) {
 
                     }
                 });
