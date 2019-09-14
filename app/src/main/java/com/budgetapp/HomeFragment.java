@@ -34,15 +34,20 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static final String USER_ID_KEY = "USER_ID";
+    public static final String USER_SALARY_KEY = "USER_SALARY";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private int mColumnCount = 1;
+
     private ExpenseListRecyclerViewAdapter viewAdapter;
     private int userId;
+    private int userMonthlySalary;
 
+    private TextView incomeValueLabel;
     private TextView expenseValueLabel;
+    private TextView balanceValueLabel;
 
     private OnFragmentInteractionListener mListener;
 
@@ -60,12 +65,13 @@ public class HomeFragment extends Fragment {
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2, int userId) {
+    public static HomeFragment newInstance(String param1, String param2, int userId, int userMonthlySalary) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         args.putInt(USER_ID_KEY, userId);
+        args.putInt(USER_SALARY_KEY, userMonthlySalary);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +83,7 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
             userId = getArguments().getInt(USER_ID_KEY);
+            userMonthlySalary = getArguments().getInt(USER_SALARY_KEY);
         }
     }
 
@@ -87,6 +94,8 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         expenseValueLabel = view.findViewById(R.id.expenseValueLabel);
+        balanceValueLabel = view.findViewById(R.id.balanceValueLabel);
+        incomeValueLabel = view.findViewById(R.id.incomeValueLabel);
 
         view.findViewById(R.id.floatingActionButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +119,8 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(viewAdapter);
 
         if (userId != -1) {
+            incomeValueLabel.setText("$" + userMonthlySalary);
+
             ApiServiceSingleton.getInstance().budgetService
                     .getOverviewForMonth(userId, "2019", "09")
                     .enqueue(new Callback<BudgetMonth>() {
@@ -124,6 +135,21 @@ public class HomeFragment extends Fragment {
 
                         @Override
                         public void onFailure(Call<BudgetMonth> call, Throwable t) {
+
+                        }
+                    });
+
+            ApiServiceSingleton.getInstance().remainingService
+                    .getRemaining(userId)
+                    .enqueue(new Callback<Remaining>() {
+                        @Override
+                        public void onResponse(Call<Remaining> call, Response<Remaining> response) {
+                            Remaining remaining = response.body();
+                            balanceValueLabel.setText("$" + remaining.getRemaining());
+                        }
+
+                        @Override
+                        public void onFailure(Call<Remaining> call, Throwable t) {
 
                         }
                     });

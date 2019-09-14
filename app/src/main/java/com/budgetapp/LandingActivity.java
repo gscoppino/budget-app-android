@@ -18,6 +18,7 @@ public class LandingActivity extends AppCompatActivity implements
         RegistrationFragment.OnFragmentInteractionListener {
 
     public static final String LOGIN_USER_ID_KEY = "com.budgetapp.LOGIN_USER_ID";
+    public static final String LOGIN_USER_SALARY_KEY = "com.budgetapp.LOGIN_USER_SALARY_KEY";
     private String usernameForRegistration;
     private String passwordForRegistration;
 
@@ -33,18 +34,17 @@ public class LandingActivity extends AppCompatActivity implements
         ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                boolean foundUser = false;
-                int userId = -1;
+                User loginUser = null;
                 for (User user : response.body()) {
                     if (user.getUsername().equals(username)) {
-                        foundUser = true;
-                        userId = user.getId();
+                        loginUser = user;
                         break;
                     }
                 }
 
-                if (foundUser) {
-                    intent.putExtra(LOGIN_USER_ID_KEY, userId);
+                if (loginUser != null) {
+                    intent.putExtra(LOGIN_USER_ID_KEY, loginUser.getId());
+                    intent.putExtra(LOGIN_USER_SALARY_KEY, loginUser.getMonthlySalary());
                     startActivity(intent);
                 }
             }
@@ -71,6 +71,7 @@ public class LandingActivity extends AppCompatActivity implements
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 intent.putExtra(LOGIN_USER_ID_KEY, response.body().getId());
+                intent.putExtra(LOGIN_USER_SALARY_KEY, response.body().getMonthlySalary());
                 startActivity(intent);
             }
 

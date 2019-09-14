@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements
 
     AppBarConfiguration appBarConfiguration;
     private int userId;
+    private int userMonthlySalary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,11 @@ public class MainActivity extends AppCompatActivity implements
 
         Intent intent = getIntent();
         userId = intent.getIntExtra(LandingActivity.LOGIN_USER_ID_KEY, -1);
+        userMonthlySalary = intent.getIntExtra(LandingActivity.LOGIN_USER_SALARY_KEY, -1);
 
         Bundle bundle = new Bundle();
         bundle.putInt(HomeFragment.USER_ID_KEY, userId);
+        bundle.putInt(HomeFragment.USER_SALARY_KEY, userMonthlySalary);
 
         navController.setGraph(R.navigation.main_navigation_graph, bundle);
     }

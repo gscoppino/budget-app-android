@@ -8,6 +8,7 @@ public class ApiServiceSingleton {
     private Retrofit retrofitInstance;
     public UserService userService;
     public BudgetService budgetService;
+    public RemainingService remainingService;
     public PurchaseService purchaseService;
 
     private ApiServiceSingleton() {
@@ -19,6 +20,7 @@ public class ApiServiceSingleton {
 
         userService = retrofitInstance.create(UserService.class);
         budgetService = retrofitInstance.create(BudgetService.class);
+        remainingService = retrofitInstance.create(RemainingService.class);
         purchaseService = retrofitInstance.create(PurchaseService.class);
     }
 
