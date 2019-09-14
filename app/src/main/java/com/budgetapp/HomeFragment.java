@@ -3,6 +3,7 @@ package com.budgetapp;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,9 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -120,42 +124,56 @@ public class HomeFragment extends Fragment {
 
         if (userId != -1) {
             incomeValueLabel.setText("$" + userMonthlySalary);
-
-            ApiServiceSingleton.getInstance().budgetService
-                    .getOverviewForMonth(userId, "2019", "09")
-                    .enqueue(new Callback<BudgetMonth>() {
-                        @Override
-                        public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) {
-                            BudgetMonth budgetMonth = response.body();
-                            expenseValueLabel.setText("$" + budgetMonth.getSum());
-                            if (viewAdapter != null) {
-                                viewAdapter.setItems(budgetMonth.getPurchaseList());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<BudgetMonth> call, Throwable t) {
-
-                        }
-                    });
-
-            ApiServiceSingleton.getInstance().remainingService
-                    .getRemaining(userId)
-                    .enqueue(new Callback<Remaining>() {
-                        @Override
-                        public void onResponse(Call<Remaining> call, Response<Remaining> response) {
-                            Remaining remaining = response.body();
-                            balanceValueLabel.setText("$" + remaining.getRemaining());
-                        }
-
-                        @Override
-                        public void onFailure(Call<Remaining> call, Throwable t) {
-
-                        }
-                    });
+            updateSummary(userId, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
+            MonthPickerView monthPickerView = view.findViewById(R.id.monthPickerView);
+            monthPickerView.setOnMonthChangedListener(new MonthPickerView.OnMonthChangeListener() {
+                @Override
+                public void onSelectedMonthChange(int year, int month) {
+                    updateSummary(userId, year, month + 1);
+                }
+            });
         }
 
         return view;
+    }
+
+    public void updateSummary(int userId, int year, int month) {
+        String sYear = Integer.toString(year);
+        String sMonth = Integer.toString(month);
+        String monthFormatString = "%1$" + 2 + "s";
+
+        ApiServiceSingleton.getInstance().budgetService
+                .getOverviewForMonth(userId, sYear, String.format(monthFormatString, sMonth).replace(' ', '0'))
+                .enqueue(new Callback<BudgetMonth>() {
+                    @Override
+                    public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) {
+                        BudgetMonth budgetMonth = response.body();
+                        expenseValueLabel.setText("$" + budgetMonth.getSum());
+                        if (viewAdapter != null) {
+                            viewAdapter.setItems(budgetMonth.getPurchaseList());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BudgetMonth> call, Throwable t) {
+
+                    }
+                });
+
+        ApiServiceSingleton.getInstance().remainingService
+                .getRemaining(userId)
+                .enqueue(new Callback<Remaining>() {
+                    @Override
+                    public void onResponse(Call<Remaining> call, Response<Remaining> response) {
+                        Remaining remaining = response.body();
+                        balanceValueLabel.setText("$" + remaining.getRemaining());
+                    }
+
+                    @Override
+                    public void onFailure(Call<Remaining> call, Throwable t) {
+
+                    }
+                });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

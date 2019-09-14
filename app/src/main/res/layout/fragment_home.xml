@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <CalendarView
-        android:id="@+id/calendarView"
+    <com.budgetapp.MonthPickerView
+        android:id="@+id/monthPickerView"
         android:layout_width="214dp"
         android:layout_height="61dp"
         android:layout_marginStart="16dp"
