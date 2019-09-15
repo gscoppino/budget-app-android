@@ -31,19 +31,26 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private EditText usernameWidget;
     private EditText passwordWidget;
 
     private OnFragmentInteractionListener mListener;
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson
+     * <a href="http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     * </p>
+     */
+    public interface OnFragmentInteractionListener {
+        void onLogin(View view, int userId, String userUsername, int userMonthlySalary);
+        void onRegister(View view, String username, String password);
+    }
 
     public LoginFragment() {
         // Required empty public constructor
@@ -53,32 +60,22 @@ public class LoginFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment LoginFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static LoginFragment newInstance() {
+        return new LoginFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -87,50 +84,14 @@ public class LoginFragment extends Fragment {
 
         view.findViewById(R.id.appRegisterButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    String username = usernameWidget.getText().toString();
-                    String password = passwordWidget.getText().toString();
-                    mListener.onRegister(view, username, password);
-                }
-            }
+            public void onClick(View view) { onClickRegister(view); }
         });
-
         view.findViewById(R.id.appLoginButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) {
-                ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
-                    @Override
-                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                        User loginUser = null;
-                        for (User user : response.body()) {
-                            if (user.getUsername().equals(usernameWidget.getText().toString())) {
-                                loginUser = user;
-                                break;
-                            }
-                        }
-
-                        if (loginUser != null && mListener != null) {
-                            mListener.onLogin(view, loginUser.getId(), loginUser.getUsername(), loginUser.getMonthlySalary());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<User>> call, Throwable t) {
-
-                    }
-                });
-            }
+            public void onClick(View view) { onClickLogin(view); }
         });
 
         return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
     }
 
     @Override
@@ -150,18 +111,33 @@ public class LoginFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onLogin(View view, int userId, String userUsername, int userMonthlySalary);
-        void onRegister(View view, String username, String password);
+    private void onClickRegister(View view) {
+        if (mListener != null) {
+            String username = usernameWidget.getText().toString();
+            String password = passwordWidget.getText().toString();
+            mListener.onRegister(view, username, password);
+        }
+    }
+
+    private void onClickLogin(final View view) {
+        ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                User loginUser = null;
+                for (User user : response.body()) {
+                    if (user.getUsername().equals(usernameWidget.getText().toString())) {
+                        loginUser = user;
+                        break;
+                    }
+                }
+
+                if (loginUser != null && mListener != null) {
+                    mListener.onLogin(view, loginUser.getId(), loginUser.getUsername(), loginUser.getMonthlySalary());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) { }
+        });
     }
 }
