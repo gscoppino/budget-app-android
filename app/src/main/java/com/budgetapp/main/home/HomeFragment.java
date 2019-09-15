@@ -35,16 +35,9 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     public static final String USER_ID_KEY = "USER_ID";
     public static final String USER_SALARY_KEY = "USER_SALARY";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     private int mColumnCount = 1;
 
     private ExpenseListRecyclerViewAdapter viewAdapter;
@@ -57,6 +50,22 @@ public class HomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson
+     * <a href="http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     * </p>
+     */
+    public interface OnFragmentInteractionListener {
+        void onAddExpense(View view);
+        void onListFragmentInteraction(Purchase item);
+    }
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -65,17 +74,13 @@ public class HomeFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @param userId UserID
+     * @param userId The user id.
+     * @param userMonthlySalary The user's monthly salary.
      * @return A new instance of fragment HomeFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2, int userId, int userMonthlySalary) {
+    public static HomeFragment newInstance(int userId, int userMonthlySalary) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         args.putInt(USER_ID_KEY, userId);
         args.putInt(USER_SALARY_KEY, userMonthlySalary);
         fragment.setArguments(args);
@@ -86,16 +91,16 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
             userId = getArguments().getInt(USER_ID_KEY);
             userMonthlySalary = getArguments().getInt(USER_SALARY_KEY);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -105,11 +110,7 @@ public class HomeFragment extends Fragment {
 
         view.findViewById(R.id.floatingActionButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (mListener != null) {
-                    mListener.onAddExpense(view);
-                }
-            }
+            public void onClick(View view) { onClickAddExpense(view); }
         });
 
         // Set the adapter
@@ -125,49 +126,15 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(viewAdapter);
 
         incomeValueLabel.setText("$" + userMonthlySalary);
-        updateSummary(userId, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
+        getSummary(userId, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
         MonthPickerView monthPickerView = view.findViewById(R.id.monthPickerView);
         monthPickerView.setOnMonthChangedListener(new MonthPickerView.OnMonthChangeListener() {
             @Override
-            public void onSelectedMonthChange(int year, int month) {
-                updateSummary(userId, year, month + 1);
-            }
+            public void onSelectedMonthChange(int year, int month) { getSummary(userId, year, month + 1); }
         });
 
         return view;
     }
-
-    public void updateSummary(int userId, int year, int month) {
-        String sYear = Integer.toString(year);
-        String sMonth = Integer.toString(month);
-        String monthFormatString = "%1$" + 2 + "s";
-
-        ApiServiceSingleton.getInstance().budgetService
-                .getOverviewForMonth(userId, sYear, String.format(monthFormatString, sMonth).replace(' ', '0'))
-                .enqueue(new Callback<BudgetMonth>() {
-                    @Override
-                    public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) {
-                        BudgetMonth budgetMonth = response.body();
-                        expenseValueLabel.setText("$" + budgetMonth.getSum());
-                        balanceValueLabel.setText("$" + (userMonthlySalary - budgetMonth.getSum()));
-                        if (viewAdapter != null) {
-                            viewAdapter.setItems(budgetMonth.getPurchaseList());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<BudgetMonth> call, Throwable t) {
-
-                    }
-                });
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
 
     @Override
     public void onAttach(Context context) {
@@ -186,19 +153,33 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
+    private void getSummary(int userId, int year, int month) {
+        String sYear = Integer.toString(year);
+        String sMonth = Integer.toString(month);
+        String monthFormatString = "%1$" + 2 + "s";
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onAddExpense(View view);
-        void onListFragmentInteraction(Purchase item);
+        ApiServiceSingleton.getInstance().budgetService
+                .getOverviewForMonth(userId, sYear, String.format(monthFormatString, sMonth).replace(' ', '0'))
+                .enqueue(new Callback<BudgetMonth>() {
+                    @Override
+                    public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) { displaySummary(response.body()); }
+
+                    @Override
+                    public void onFailure(Call<BudgetMonth> call, Throwable t) { }
+                });
+    }
+
+    private void displaySummary(BudgetMonth budgetMonth) {
+        expenseValueLabel.setText("$" + budgetMonth.getSum());
+        balanceValueLabel.setText("$" + (userMonthlySalary - budgetMonth.getSum()));
+        if (viewAdapter != null) {
+            viewAdapter.setItems(budgetMonth.getPurchaseList());
+        }
+    }
+
+    private void onClickAddExpense(View view) {
+        if (mListener != null) {
+            mListener.onAddExpense(view);
+        }
     }
 }
