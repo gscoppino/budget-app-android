@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment {
                         }
 
                         if (loginUser != null && mListener != null) {
-                            mListener.onLogin(view, loginUser.getId(), loginUser.getMonthlySalary());
+                            mListener.onLogin(view, loginUser.getId(), loginUser.getUsername(), loginUser.getMonthlySalary());
                         }
                     }
 
@@ -157,7 +157,7 @@ public class LoginFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view, int userId, int userMonthlySalary);
+        void onLogin(View view, int userId, String userUsername, int userMonthlySalary);
         void onRegister(View view, String username, String password);
     }
 }

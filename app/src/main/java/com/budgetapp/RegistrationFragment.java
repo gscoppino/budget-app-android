@@ -97,7 +97,7 @@ public class RegistrationFragment extends Fragment {
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (mListener != null) {
                             User user = response.body();
-                            mListener.onLogin(view, user.getId(), user.getMonthlySalary());
+                            mListener.onLogin(view, user.getId(), user.getUsername(), user.getMonthlySalary());
                         }
                     }
 
@@ -147,6 +147,6 @@ public class RegistrationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view, int userId, int monthlySalary);
+        void onLogin(View view, int userId, String userUsername, int monthlySalary);
     }
 }
