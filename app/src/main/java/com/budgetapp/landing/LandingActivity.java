@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.landing;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.Navigation;
@@ -6,6 +6,11 @@ import androidx.navigation.Navigation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.budgetapp.landing.login.LoginFragment;
+import com.budgetapp.landing.registration.RegistrationFragment;
+import com.budgetapp.main.MainActivity;
+import com.budgetapp.R;
 
 public class LandingActivity extends AppCompatActivity implements
         LoginFragment.OnFragmentInteractionListener,

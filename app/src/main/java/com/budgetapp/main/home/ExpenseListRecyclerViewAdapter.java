@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.main.home;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.budgetapp.api.models.Purchase;
+import com.budgetapp.R;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.landing.login;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import com.budgetapp.R;
+import com.budgetapp.api.models.User;
+import com.budgetapp.api.ApiServiceSingleton;
 
 import java.util.List;
 

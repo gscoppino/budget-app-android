@@ -1,4 +1,7 @@
-package com.budgetapp;
+package com.budgetapp.api.services;
+
+import com.budgetapp.api.models.NewPurchasePayload;
+import com.budgetapp.api.models.Purchase;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

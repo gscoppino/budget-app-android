@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.api;
 
 import java.security.cert.CertificateException;
 

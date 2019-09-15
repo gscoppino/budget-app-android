@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.main.home;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.budgetapp.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.main;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.budgetapp.api.models.Purchase;
+import com.budgetapp.R;
+import com.budgetapp.landing.LandingActivity;
+import com.budgetapp.main.addExpense.AddExpenseFragment;
+import com.budgetapp.main.home.HomeFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements

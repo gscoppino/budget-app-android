@@ -1,4 +1,8 @@
-package com.budgetapp;
+package com.budgetapp.api;
+
+import com.budgetapp.api.services.BudgetService;
+import com.budgetapp.api.services.PurchaseService;
+import com.budgetapp.api.services.UserService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;

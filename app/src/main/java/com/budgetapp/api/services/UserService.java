@@ -1,4 +1,7 @@
-package com.budgetapp;
+package com.budgetapp.api.services;
+
+import com.budgetapp.api.models.NewUserPayload;
+import com.budgetapp.api.models.User;
 
 import java.util.List;
 

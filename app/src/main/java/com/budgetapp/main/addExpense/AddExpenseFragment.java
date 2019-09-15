@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.main.addExpense;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.budgetapp.api.ApiServiceSingleton;
+import com.budgetapp.api.models.NewPurchasePayload;
+import com.budgetapp.api.models.Purchase;
+import com.budgetapp.R;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -18,32 +23,29 @@ import retrofit2.Response;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link RegistrationFragment.OnFragmentInteractionListener} interface
+ * {@link AddExpenseFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link RegistrationFragment#newInstance} factory method to
+ * Use the {@link AddExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegistrationFragment extends Fragment {
+public class AddExpenseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    public static final String USER_USERNAME = "USER_USERNAME";
-    public static final String USER_PASSWORD = "USER_PASSWORD";
-
-    private EditText monthlySalaryWidget;
+    public static final String USER_ID_KEY = "USER_ID";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private String userUsername;
-    private String userPassword;
+    private int userId;
+
+    private EditText expenseAmountWidget;
 
     private OnFragmentInteractionListener mListener;
 
-    public RegistrationFragment() {
+    public AddExpenseFragment() {
         // Required empty public constructor
     }
 
@@ -53,16 +55,16 @@ public class RegistrationFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RegistrationFragment.
+     * @param userId UserID
+     * @return A new instance of fragment AddExpenseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RegistrationFragment newInstance(String param1, String param2, String userUsername, String userPassword) {
-        RegistrationFragment fragment = new RegistrationFragment();
+    public static AddExpenseFragment newInstance(String param1, String param2, int userId) {
+        AddExpenseFragment fragment = new AddExpenseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
-        args.putString(USER_USERNAME, userUsername);
-        args.putString(USER_PASSWORD, userPassword);
+        args.putInt(USER_ID_KEY, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,8 +75,7 @@ public class RegistrationFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-            userUsername = getArguments().getString(USER_USERNAME);
-            userPassword = getArguments().getString(USER_PASSWORD);
+            userId = getArguments().getInt(USER_ID_KEY);
         }
     }
 
@@ -82,30 +83,29 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_registration, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_expense, container, false);
+        expenseAmountWidget = view.findViewById(R.id.expenseAmountInput);
 
-        monthlySalaryWidget = view.findViewById(R.id.appMonthlySalaryInput);
-
-        view.findViewById(R.id.appBeginButton).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.submitNewExpenseButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                NewUserPayload newUserPayload = new NewUserPayload();
-                newUserPayload.setUsername(userUsername);
-                newUserPayload.setSalary(Integer.parseInt(monthlySalaryWidget.getText().toString(), 10));
-                ApiServiceSingleton.getInstance().userService.createUser(newUserPayload).enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        if (mListener != null) {
-                            User user = response.body();
-                            mListener.onLogin(view, user.getId(), user.getUsername(), user.getMonthlySalary());
-                        }
-                    }
+                NewPurchasePayload newPurchasePayload = new NewPurchasePayload();
+                newPurchasePayload.setCost(Integer.parseInt(expenseAmountWidget.getText().toString(), 10));
+                ApiServiceSingleton.getInstance().purchaseService
+                        .createPurchase(userId, newPurchasePayload)
+                        .enqueue(new Callback<Purchase>() {
+                            @Override
+                            public void onResponse(Call<Purchase> call, Response<Purchase> response) {
+                                if (mListener != null) {
+                                    mListener.onSubmitExpense(view);
+                                }
+                            }
 
-                    @Override
-                    public void onFailure(Call call, Throwable t) {
+                            @Override
+                            public void onFailure(Call call, Throwable t) {
 
-                    }
-                });
+                            }
+                        });
             }
         });
 
@@ -115,7 +115,7 @@ public class RegistrationFragment extends Fragment {
     // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
-//            mListener.onBegin(uri);
+//            mListener.onFragmentInteraction(uri);
 //        }
 //    }
 
@@ -147,6 +147,6 @@ public class RegistrationFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view, int userId, String userUsername, int monthlySalary);
+        void onSubmitExpense(final View view);
     }
 }

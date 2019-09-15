@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

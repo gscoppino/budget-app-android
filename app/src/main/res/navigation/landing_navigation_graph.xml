@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.budgetapp.LoginFragment"
+        android:name="com.budgetapp.landing.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"
-        android:name="com.budgetapp.RegistrationFragment"
+        android:name="com.budgetapp.landing.registration.RegistrationFragment"
         android:label="Registration"
         tools:layout="@layout/fragment_registration" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.budgetapp;
+package com.budgetapp.main.home;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.budgetapp.api.models.Purchase;
+import com.budgetapp.R;
+import com.budgetapp.api.ApiServiceSingleton;
+import com.budgetapp.api.models.BudgetMonth;
 
 import java.util.ArrayList;
 import java.util.Calendar;
