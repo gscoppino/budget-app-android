@@ -15,7 +15,7 @@
         android:layout_marginRight="16dp"
         android:clickable="true"
         android:foregroundGravity="left"
-        android:src="@android:drawable/ic_media_previous"
+        android:src="@drawable/ic_mat_chevron_left"
         app:layout_constraintEnd_toStartOf="@+id/date_display_date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -47,7 +47,7 @@
         android:layout_marginRight="48dp"
         android:clickable="true"
         android:foregroundGravity="right"
-        android:src="@android:drawable/ic_media_next"
+        android:src="@drawable/ic_mat_chevron_right"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/date_display_date"
         app:layout_constraintTop_toTopOf="parent" />
