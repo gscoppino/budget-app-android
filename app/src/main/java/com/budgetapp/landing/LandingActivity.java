@@ -27,7 +27,7 @@ public class LandingActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_landing);
     }
 
-    public void onLogin(View view, final int userId, final String userUsername, final int userMonthlySalary) {
+    public void onUserAuthenticated(View view, final int userId, final String userUsername, final int userMonthlySalary) {
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(LOGIN_USER_ID_KEY, userId);
         intent.putExtra(LOGIN_USER_SALARY_KEY, userMonthlySalary);
@@ -35,7 +35,7 @@ public class LandingActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    public void onRegister(View view, final String username, final String password) {
+    public void onRegisterUserSelected(View view, final String username, final String password) {
         Bundle bundle = new Bundle();
         bundle.putString(RegistrationFragment.USER_USERNAME, username);
         bundle.putString(RegistrationFragment.USER_PASSWORD, password);

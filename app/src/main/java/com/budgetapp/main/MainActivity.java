@@ -85,11 +85,9 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    public void onListFragmentInteraction(Purchase item) {
+    public void onExpenseItemSelected(Purchase item) { }
 
-    }
-
-    public void onAddExpense(View view) {
+    public void onAddExpenseSelected(View view) {
         Bundle bundle = new Bundle();
         bundle.putInt(AddExpenseFragment.USER_ID_KEY, userId);
         Navigation.findNavController(view).navigate(
@@ -97,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements
                 bundle);
     }
 
-    public void onSubmitExpense(final View view) {
+    public void onExpenseItemCreated(final View view) {
         Bundle bundle = new Bundle();
         bundle.putInt(HomeFragment.USER_ID_KEY, userId);
         bundle.putInt(HomeFragment.USER_SALARY_KEY, userMonthlySalary);

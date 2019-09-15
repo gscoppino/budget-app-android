@@ -62,8 +62,8 @@ public class HomeFragment extends Fragment {
      * </p>
      */
     public interface OnFragmentInteractionListener {
-        void onAddExpense(View view);
-        void onListFragmentInteraction(Purchase item);
+        void onAddExpenseSelected(View view);
+        void onExpenseItemSelected(Purchase item);
     }
 
     public HomeFragment() {
@@ -130,7 +130,7 @@ public class HomeFragment extends Fragment {
         MonthPickerView monthPickerView = view.findViewById(R.id.monthPickerView);
         monthPickerView.setOnMonthChangedListener(new MonthPickerView.OnMonthChangeListener() {
             @Override
-            public void onSelectedMonthChange(int year, int month) { getSummary(userId, year, month + 1); }
+            public void onSelectedMonthChanged(int year, int month) { getSummary(userId, year, month + 1); }
         });
 
         return view;
@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment {
 
     private void onClickAddExpense(View view) {
         if (mListener != null) {
-            mListener.onAddExpense(view);
+            mListener.onAddExpenseSelected(view);
         }
     }
 }

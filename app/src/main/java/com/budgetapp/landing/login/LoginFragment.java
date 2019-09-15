@@ -48,8 +48,8 @@ public class LoginFragment extends Fragment {
      * </p>
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view, int userId, String userUsername, int userMonthlySalary);
-        void onRegister(View view, String username, String password);
+        void onUserAuthenticated(View view, int userId, String userUsername, int userMonthlySalary);
+        void onRegisterUserSelected(View view, String username, String password);
     }
 
     public LoginFragment() {
@@ -88,7 +88,7 @@ public class LoginFragment extends Fragment {
         });
         view.findViewById(R.id.appLoginButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { onClickLogin(view); }
+            public void onClick(View view) { authenticateUser(view); }
         });
 
         return view;
@@ -115,11 +115,11 @@ public class LoginFragment extends Fragment {
         if (mListener != null) {
             String username = usernameWidget.getText().toString();
             String password = passwordWidget.getText().toString();
-            mListener.onRegister(view, username, password);
+            mListener.onRegisterUserSelected(view, username, password);
         }
     }
 
-    private void onClickLogin(final View view) {
+    private void authenticateUser(final View view) {
         ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
@@ -132,7 +132,7 @@ public class LoginFragment extends Fragment {
                 }
 
                 if (loginUser != null && mListener != null) {
-                    mListener.onLogin(view, loginUser.getId(), loginUser.getUsername(), loginUser.getMonthlySalary());
+                    mListener.onUserAuthenticated(view, loginUser.getId(), loginUser.getUsername(), loginUser.getMonthlySalary());
                 }
             }
 

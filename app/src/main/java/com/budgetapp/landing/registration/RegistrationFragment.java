@@ -51,7 +51,7 @@ public class RegistrationFragment extends Fragment {
      * </p>
      */
     public interface OnFragmentInteractionListener {
-        void onLogin(View view, int userId, String userUsername, int monthlySalary);
+        void onUserAuthenticated(View view, int userId, String userUsername, int monthlySalary);
     }
 
     public RegistrationFragment() {
@@ -96,7 +96,7 @@ public class RegistrationFragment extends Fragment {
 
         view.findViewById(R.id.appBeginButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { onClickBegin(view); }
+            public void onClick(View view) { registerUser(view); }
         });
 
         return view;
@@ -119,7 +119,7 @@ public class RegistrationFragment extends Fragment {
         mListener = null;
     }
 
-    private void onClickBegin(final View view) {
+    private void registerUser(final View view) {
         NewUserPayload newUserPayload = new NewUserPayload();
         newUserPayload.setUsername(userUsername);
         newUserPayload.setSalary(Integer.parseInt(monthlySalaryWidget.getText().toString(), 10));
@@ -128,7 +128,7 @@ public class RegistrationFragment extends Fragment {
             public void onResponse(Call<User> call, Response<User> response) {
                 if (mListener != null) {
                     User user = response.body();
-                    mListener.onLogin(view, user.getId(), user.getUsername(), user.getMonthlySalary());
+                    mListener.onUserAuthenticated(view, user.getId(), user.getUsername(), user.getMonthlySalary());
                 }
             }
 

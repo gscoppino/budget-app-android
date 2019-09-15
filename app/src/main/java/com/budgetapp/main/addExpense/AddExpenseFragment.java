@@ -49,7 +49,7 @@ public class AddExpenseFragment extends Fragment {
      * </p>
      */
     public interface OnFragmentInteractionListener {
-        void onSubmitExpense(final View view);
+        void onExpenseItemCreated(final View view);
     }
 
     public AddExpenseFragment() {
@@ -90,7 +90,7 @@ public class AddExpenseFragment extends Fragment {
 
         view.findViewById(R.id.submitNewExpenseButton).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View view) { onClickAddExpense(view); }
+            public void onClick(final View view) { createNewExpenseItem(view); }
         });
 
         return view;
@@ -113,7 +113,7 @@ public class AddExpenseFragment extends Fragment {
         mListener = null;
     }
 
-    private void onClickAddExpense(final View view) {
+    private void createNewExpenseItem(final View view) {
         NewPurchasePayload newPurchasePayload = new NewPurchasePayload();
         newPurchasePayload.setCost(Integer.parseInt(expenseAmountWidget.getText().toString(), 10));
         ApiServiceSingleton.getInstance().purchaseService
@@ -122,7 +122,7 @@ public class AddExpenseFragment extends Fragment {
                     @Override
                     public void onResponse(Call<Purchase> call, Response<Purchase> response) {
                         if (mListener != null) {
-                            mListener.onSubmitExpense(view);
+                            mListener.onExpenseItemCreated(view);
                         }
                     }
 

@@ -42,7 +42,7 @@ public class MonthPickerView extends LinearLayout {
             public void onClick(View v) {
                 calendar.add(Calendar.MONTH, -1);
                 updateCalendar(calendar.getTime());
-                listener.onSelectedMonthChange(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+                listener.onSelectedMonthChanged(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
             }
         });
 
@@ -51,7 +51,7 @@ public class MonthPickerView extends LinearLayout {
             public void onClick(View v) {
                 calendar.add(Calendar.MONTH, 1);
                 updateCalendar(calendar.getTime());
-                listener.onSelectedMonthChange(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
+                listener.onSelectedMonthChanged(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
             }
         });
 
@@ -67,6 +67,6 @@ public class MonthPickerView extends LinearLayout {
     }
 
     public interface OnMonthChangeListener {
-        void onSelectedMonthChange(int year, int month);
+        void onSelectedMonthChanged(int year, int month);
     }
 }
