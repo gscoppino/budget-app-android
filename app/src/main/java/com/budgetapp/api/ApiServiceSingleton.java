@@ -1,6 +1,7 @@
 package com.budgetapp.api;
 
 import com.budgetapp.api.services.BudgetService;
+import com.budgetapp.api.services.LoginService;
 import com.budgetapp.api.services.PurchaseService;
 import com.budgetapp.api.services.UserService;
 
@@ -10,6 +11,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class ApiServiceSingleton {
     private static ApiServiceSingleton instance;
     private Retrofit retrofitInstance;
+    public LoginService loginService;
     public UserService userService;
     public BudgetService budgetService;
     public PurchaseService purchaseService;
@@ -21,6 +23,7 @@ public class ApiServiceSingleton {
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
 
+        loginService = retrofitInstance.create(LoginService.class);
         userService = retrofitInstance.create(UserService.class);
         budgetService = retrofitInstance.create(BudgetService.class);
         purchaseService = retrofitInstance.create(PurchaseService.class);

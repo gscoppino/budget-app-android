@@ -1,7 +1,6 @@
 package com.budgetapp.landing.login;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,12 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
 import com.budgetapp.R;
-import com.budgetapp.api.models.User;
 import com.budgetapp.api.ApiServiceSingleton;
+import com.budgetapp.api.models.UserCredentials;
 
-import java.util.List;
-
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,24 +120,35 @@ public class LoginFragment extends Fragment {
     }
 
     private void authenticateUser(final View view) {
-        ApiServiceSingleton.getInstance().userService.getUsers().enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                User loginUser = null;
-                for (User user : response.body()) {
-                    if (user.getUsername().equals(usernameWidget.getText().toString())) {
-                        loginUser = user;
-                        break;
-                    }
-                }
+        UserCredentials userCredentials = new UserCredentials();
+        userCredentials.setUsername((usernameWidget.getText().toString()));
+        userCredentials.setPw((passwordWidget.getText().toString()));
 
-                if (loginUser != null && mListener != null) {
-                    mListener.onUserAuthenticated(view, loginUser.getId(), loginUser.getUsername(), loginUser.getMonthlySalary());
-                }
+        ApiServiceSingleton.getInstance().loginService.authenticateUser(userCredentials).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response){
+                    final String AUTH_PREFIX = "Bearer ";
+
+                    Headers headers = response.headers();
+                    String authorizationHeader = headers.get("Authorization");
+
+                    if (!authorizationHeader.startsWith(AUTH_PREFIX)) {
+                        return;
+                    }
+
+                    JWT jwt = new JWT(authorizationHeader.substring(AUTH_PREFIX.length()));
+
+                    Claim id = jwt.getClaim("id");
+                    Claim username = jwt.getClaim("username");
+                    Claim monthlySalary = jwt.getClaim("monthlysalary");
+
+                    if (mListener != null) {
+                        mListener.onUserAuthenticated(view, id.asInt(), username.asString(), monthlySalary.asInt());
+                    }
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) { }
+            public void onFailure(Call call, Throwable t) { }
         });
     }
 }

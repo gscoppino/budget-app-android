@@ -1,17 +1,17 @@
 package com.budgetapp.api.services;
 
-import com.budgetapp.api.models.NewUserPayload;
+
+import com.budgetapp.api.models.UserCredentials;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
-public interface UserService {
-    @POST("users")
+public interface LoginService {
+    @POST("login")
     @Headers({
-            "Accept: application/json",
             "Content-Type: application/json"
     })
-    Call<Void> createUser(@Body NewUserPayload newUserPayload);
+    Call<Void> authenticateUser(@Body UserCredentials userCredentials);
 }

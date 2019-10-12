@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
 import com.budgetapp.R;
-import com.budgetapp.api.models.User;
 import com.budgetapp.api.ApiServiceSingleton;
 import com.budgetapp.api.models.NewUserPayload;
 
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -122,13 +124,28 @@ public class RegistrationFragment extends Fragment {
     private void registerUser(final View view) {
         NewUserPayload newUserPayload = new NewUserPayload();
         newUserPayload.setUsername(userUsername);
+        newUserPayload.setPw(userPassword);
         newUserPayload.setSalary(Integer.parseInt(monthlySalaryWidget.getText().toString(), 10));
-        ApiServiceSingleton.getInstance().userService.createUser(newUserPayload).enqueue(new Callback<User>() {
+        ApiServiceSingleton.getInstance().userService.createUser(newUserPayload).enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<User> call, Response<User> response) {
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                final String AUTH_PREFIX = "Bearer ";
+
+                Headers headers = response.headers();
+                String authorizationHeader = headers.get("Authorization");
+
+                if (!authorizationHeader.startsWith(AUTH_PREFIX)) {
+                    return;
+                }
+
+                JWT jwt = new JWT(authorizationHeader.substring(AUTH_PREFIX.length()));
+
+                Claim id = jwt.getClaim("id");
+                Claim username = jwt.getClaim("username");
+                Claim monthlySalary = jwt.getClaim("monthlysalary");
+
                 if (mListener != null) {
-                    User user = response.body();
-                    mListener.onUserAuthenticated(view, user.getId(), user.getUsername(), user.getMonthlySalary());
+                    mListener.onUserAuthenticated(view, id.asInt(), username.asString(), monthlySalary.asInt());
                 }
             }
 

@@ -2,15 +2,12 @@ package com.budgetapp.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class NewUserPayload {
+public class UserCredentials {
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("password")
+    @JsonProperty("pw")
     private String pw;
-
-    @JsonProperty("salary")
-    private int salary;
 
     @JsonProperty("username")
     public String getUsername() {
@@ -23,18 +20,12 @@ public class NewUserPayload {
     }
 
     @JsonProperty("pw")
-    public String getPw() { return pw; }
-
-    @JsonProperty("pw")
-    public void setPw(String pw) { this.pw = pw; }
-
-    @JsonProperty("salary")
-    public int getSalary() {
-        return salary;
+    public String getPw() {
+        return pw;
     }
 
-    @JsonProperty("salary")
-    public void setSalary(int salary) {
-        this.salary = salary;
+    @JsonProperty("pw")
+    public void setPw(String pw) {
+        this.pw = pw;
     }
 }
