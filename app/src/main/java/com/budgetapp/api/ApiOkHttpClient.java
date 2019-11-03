@@ -11,10 +11,10 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 
-/** TODO: Remove this. Only using for development purpose **/
-public class UnsafeOkHttpClient {
-    public static OkHttpClient getUnsafeOkHttpClient() {
+public class ApiOkHttpClient {
+    public static OkHttpClient getApiOkHttpClient() {
         try {
+            /** TODO: Remove this. Only using for development purpose */
             // Create a trust manager that does not validate certificate chains
             final TrustManager[] trustAllCerts = new TrustManager[] {
                     new X509TrustManager() {
@@ -39,8 +39,11 @@ public class UnsafeOkHttpClient {
 
             // Create an ssl socket factory with our all-trusting manager
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+            /**********************************************************/
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+            /** TODO: Remove this. Only using for development purpose */
             builder.sslSocketFactory(sslSocketFactory, (X509TrustManager)trustAllCerts[0]);
             builder.hostnameVerifier(new HostnameVerifier() {
                 @Override
@@ -48,8 +51,12 @@ public class UnsafeOkHttpClient {
                     return true;
                 }
             });
+            /************************************************************/
+
+            builder.addInterceptor(new ApiTokenAuthenticationInterceptor());
 
             OkHttpClient okHttpClient = builder.build();
+
             return okHttpClient;
         } catch (Exception e) {
             throw new RuntimeException(e);

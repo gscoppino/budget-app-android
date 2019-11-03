@@ -117,7 +117,7 @@ public class AddExpenseFragment extends Fragment {
         NewPurchasePayload newPurchasePayload = new NewPurchasePayload();
         newPurchasePayload.setCost(Integer.parseInt(expenseAmountWidget.getText().toString(), 10));
         ApiServiceSingleton.getInstance().purchaseService
-                .createPurchase(userId, newPurchasePayload)
+                .createPurchase(newPurchasePayload)
                 .enqueue(new Callback<Purchase>() {
                     @Override
                     public void onResponse(Call<Purchase> call, Response<Purchase> response) {

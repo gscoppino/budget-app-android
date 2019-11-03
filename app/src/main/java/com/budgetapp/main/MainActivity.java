@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.budgetapp.api.SessionSingleton;
 import com.budgetapp.api.models.Purchase;
 import com.budgetapp.R;
 import com.budgetapp.landing.LandingActivity;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.logout) {
+            SessionSingleton.getInstance().setJwt(null);
             Intent intent = new Intent(this, LandingActivity.class);
             startActivity(intent);
         }

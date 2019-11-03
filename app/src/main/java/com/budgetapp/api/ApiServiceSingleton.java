@@ -19,7 +19,7 @@ public class ApiServiceSingleton {
     private ApiServiceSingleton() {
         retrofitInstance = new Retrofit.Builder()
                 .baseUrl("https://10.0.2.2:8080/api/")
-                .client(UnsafeOkHttpClient.getUnsafeOkHttpClient()) // TODO: Remove this
+                .client(ApiOkHttpClient.getApiOkHttpClient())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build();
 

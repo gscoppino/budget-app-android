@@ -14,9 +14,9 @@ import com.auth0.android.jwt.Claim;
 import com.auth0.android.jwt.JWT;
 import com.budgetapp.R;
 import com.budgetapp.api.ApiServiceSingleton;
+import com.budgetapp.api.SessionSingleton;
 import com.budgetapp.api.models.NewUserPayload;
 
-import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -129,16 +129,7 @@ public class RegistrationFragment extends Fragment {
         ApiServiceSingleton.getInstance().userService.createUser(newUserPayload).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                final String AUTH_PREFIX = "Bearer ";
-
-                Headers headers = response.headers();
-                String authorizationHeader = headers.get("Authorization");
-
-                if (!authorizationHeader.startsWith(AUTH_PREFIX)) {
-                    return;
-                }
-
-                JWT jwt = new JWT(authorizationHeader.substring(AUTH_PREFIX.length()));
+                JWT jwt = SessionSingleton.getInstance().getJwt();
 
                 Claim id = jwt.getClaim("id");
                 Claim username = jwt.getClaim("username");
