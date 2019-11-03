@@ -126,11 +126,11 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(viewAdapter);
 
         incomeValueLabel.setText("$" + userMonthlySalary);
-        getSummary(userId, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
+        getSummary(Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH) + 1);
         MonthPickerView monthPickerView = view.findViewById(R.id.monthPickerView);
         monthPickerView.setOnMonthChangedListener(new MonthPickerView.OnMonthChangeListener() {
             @Override
-            public void onSelectedMonthChanged(int year, int month) { getSummary(userId, year, month + 1); }
+            public void onSelectedMonthChanged(int year, int month) { getSummary(year, month + 1); }
         });
 
         return view;
@@ -153,13 +153,13 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
-    private void getSummary(int userId, int year, int month) {
+    private void getSummary(int year, int month) {
         String sYear = Integer.toString(year);
         String sMonth = Integer.toString(month);
         String monthFormatString = "%1$" + 2 + "s";
 
         ApiServiceSingleton.getInstance().budgetService
-                .getOverviewForMonth(userId, sYear, String.format(monthFormatString, sMonth).replace(' ', '0'))
+                .getOverviewForMonth(sYear, String.format(monthFormatString, sMonth).replace(' ', '0'))
                 .enqueue(new Callback<BudgetMonth>() {
                     @Override
                     public void onResponse(Call<BudgetMonth> call, Response<BudgetMonth> response) { displaySummary(response.body()); }
