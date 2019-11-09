@@ -15,4 +15,8 @@
     <string name="app_expense_amount_input">Amount ($ USD)</string>
     <string name="app_expense_note_input">Note (optional)</string>
     <string name="app_expense_submit_button_text">Add Expense</string>
+    <string name="app_salary_update_button_text">Update Salary</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

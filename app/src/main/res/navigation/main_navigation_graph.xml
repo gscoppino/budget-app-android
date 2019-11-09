@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_addExpenseFragment"
             app:destination="@id/addExpenseFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_updateSalaryFragment"
+            app:destination="@id/updateSalaryFragment" />
     </fragment>
     <fragment
         android:id="@+id/addExpenseFragment"
@@ -21,6 +24,15 @@
         tools:layout="@layout/fragment_add_expense">
         <action
             android:id="@+id/action_addExpenseFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateSalaryFragment"
+        android:name="com.budgetapp.main.updateSalary.UpdateSalaryFragment"
+        android:label="Update Salary"
+        tools:layout="@layout/fragment_update_salary" >
+        <action
+            android:id="@+id/action_updateSalaryFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
 </navigation>

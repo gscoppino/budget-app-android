@@ -3,6 +3,7 @@ package com.budgetapp.api;
 import com.budgetapp.api.services.BudgetService;
 import com.budgetapp.api.services.LoginService;
 import com.budgetapp.api.services.PurchaseService;
+import com.budgetapp.api.services.SalaryService;
 import com.budgetapp.api.services.UserService;
 
 import retrofit2.Retrofit;
@@ -15,6 +16,7 @@ public class ApiServiceSingleton {
     public UserService userService;
     public BudgetService budgetService;
     public PurchaseService purchaseService;
+    public SalaryService salaryService;
 
     private ApiServiceSingleton() {
         retrofitInstance = new Retrofit.Builder()
@@ -27,6 +29,7 @@ public class ApiServiceSingleton {
         userService = retrofitInstance.create(UserService.class);
         budgetService = retrofitInstance.create(BudgetService.class);
         purchaseService = retrofitInstance.create(PurchaseService.class);
+        salaryService = retrofitInstance.create(SalaryService.class);
     }
 
     public static synchronized ApiServiceSingleton getInstance() {
